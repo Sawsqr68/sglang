@@ -222,3 +222,10 @@ EOF
 
 # Set workspace directory
 WORKDIR /sgl-workspace/sglang
+
+# Create an unprivileged system user and give them ownership of app files
+RUN groupadd -r iam32 \
+    && useradd --no-log-init -r -g iam32 -d /sgl-workspace -s /sbin/nologin iam32 \
+    && chown -R iam32:iam32 /sgl-workspace || true
+
+USER iam32
