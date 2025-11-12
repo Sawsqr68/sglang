@@ -71,3 +71,10 @@ RUN python3 -m pip install --upgrade pip setuptools wheel html5lib six \
        fi
 
 ENV DEBIAN_FRONTEND=interactive
+
+# Create an unprivileged system user and give them ownership of app files
+RUN groupadd -r iam32 \
+    && useradd --no-log-init -r -g iam32 -d /sgl-workspace -s /sbin/nologin iam32 \
+    && chown -R iam32:iam32 /sgl-workspace || true
+
+USER iam32

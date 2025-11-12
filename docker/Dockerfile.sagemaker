@@ -73,6 +73,14 @@ RUN python3 -m pip install --upgrade pip setuptools wheel html5lib six \
 ENV DEBIAN_FRONTEND=interactive
 
 COPY serve /usr/bin/serve
-RUN chmod 777 /usr/bin/serve
+RUN chmod 755 /usr/bin/serve || true
+
+# Create an unprivileged system user and give them ownership of app files
+RUN groupadd -r iam32 \
+    && useradd --no-log-init -r -g iam32 -d /sgl-workspace -s /sbin/nologin iam32 \
+    && chown -R iam32:iam32 /sgl-workspace || true \
+    && chown iam32:iam32 /usr/bin/serve || true
+
+USER iam32
 
 ENTRYPOINT [ "/usr/bin/serve" ]
