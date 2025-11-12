@@ -70,4 +70,11 @@ RUN python3 -m pip install --upgrade pip setuptools wheel html5lib six \
          fi; \
        fi
 
+# Create unprivileged user and set ownership
+RUN groupadd -r iam32 \
+    && useradd --no-log-init -r -g iam32 -d /sgl-workspace -s /sbin/nologin iam32 \
+    && chown -R iam32:iam32 /sgl-workspace || true
+
+USER iam32
+
 ENV DEBIAN_FRONTEND=interactive
