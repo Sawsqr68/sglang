@@ -72,7 +72,16 @@ RUN python3 -m pip install --upgrade pip setuptools wheel html5lib six \
 
 ENV DEBIAN_FRONTEND=interactive
 
+# Create unprivileged user and set permissions
+RUN groupadd -r appuser \
+    && useradd --no-log-init -r -g appuser -d /sgl-workspace -s /sbin/nologin appuser \
+    && chown -R appuser:appuser /sgl-workspace
+
 COPY serve /usr/bin/serve
-RUN chmod 777 /usr/bin/serve
+RUN chown appuser:appuser /usr/bin/serve \
+    && chmod 755 /usr/bin/serve
+
+# Switch to unprivileged user
+USER appuser
 
 ENTRYPOINT [ "/usr/bin/serve" ]

@@ -70,4 +70,12 @@ RUN python3 -m pip install --upgrade pip setuptools wheel html5lib six \
          fi; \
        fi
 
+# Create unprivileged user and set permissions
+RUN groupadd -r appuser \
+    && useradd --no-log-init -r -g appuser -d /sgl-workspace -s /sbin/nologin appuser \
+    && chown -R appuser:appuser /sgl-workspace
+
+# Switch to unprivileged user
+USER appuser
+
 ENV DEBIAN_FRONTEND=interactive
