@@ -222,3 +222,11 @@ EOF
 
 # Set workspace directory
 WORKDIR /sgl-workspace/sglang
+
+# Create unprivileged user and set permissions
+RUN groupadd -r appuser \
+    && useradd --no-log-init -r -g appuser -d /sgl-workspace -s /sbin/nologin appuser \
+    && chown -R appuser:appuser /sgl-workspace
+
+# Switch to unprivileged user
+USER appuser
